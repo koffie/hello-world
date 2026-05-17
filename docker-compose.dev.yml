@@ -1,0 +1,11 @@
+services:
+  gerby:
+    build: .
+    volumes:
+      - .:/project
+      - /Users/mderickx/code/one_project_to_rule_them_all/libs/gerby-website:/app/gerby-website
+    ports:
+      - "8080:5000"
+    environment:
+      FLASK_DEBUG: "1"
+      PYTHONPATH: /app/gerby-website
