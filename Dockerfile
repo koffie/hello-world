@@ -9,14 +9,19 @@ RUN useradd -m appuser
 
 WORKDIR /app
 
-# 1) install plasTeX (Gerby branch)
-RUN git clone --branch gerby --single-branch https://github.com/gerby-project/plastex.git && \
+# create isolated virtual environments
+RUN python3 -m venv /app/venv-plastex && \
+    python3 -m venv /app/venv-gerby
+
+# 1) install plasTeX (koffie fork) into its own venv
+RUN git clone https://github.com/koffie/plastex.git && \
     cd plastex && \
-    git reset --hard a75473f890db3d21e3bf76430c5c1ffc0661a69a && \
-    pip install --no-cache-dir . && \
+    git reset --hard 0719772bae931d356de012ca1518cc3fb8ef34f0 && \
+    /app/venv-plastex/bin/pip install --no-cache-dir . && \
+    /app/venv-plastex/bin/pip install --no-cache-dir unidecode && \
     cd .. && rm -rf plastex
 
-# 2) install Gerby
+# 2) install Gerby into its own venv
 RUN git clone https://github.com/gerby-project/gerby-website.git && \
     cd gerby-website && \
     git reset --hard e6c41f5eebcdaedade3dfe7b3dd8a36f967c1336 && \
@@ -28,8 +33,8 @@ RUN git clone https://github.com/gerby-project/gerby-website.git && \
     cp jquery-bonsai/jquery.bonsai.css css/ && \
     rm -rf jquery-bonsai && \
     cd ../.. && \
-    pip install --no-cache-dir . && \
-    pip install --no-cache-dir "peewee<3.17" && \
+    /app/venv-gerby/bin/pip install --no-cache-dir . && \
+    /app/venv-gerby/bin/pip install --no-cache-dir "peewee<3.17" && \
     cd ..
 
 # setup soft links for database
@@ -43,6 +48,8 @@ RUN chmod +x /app/entrypoint.sh && chown -R appuser /app
 
 USER appuser
 
+# PYTHONPATH lets the gerby venv pick up the user-supplied configuration.py
+# from the source tree instead of the installed package default
 ENV PYTHONPATH=/app/gerby-website
 
 # Users mount their project directory here
