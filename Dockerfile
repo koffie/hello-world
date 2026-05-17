@@ -1,48 +1,53 @@
-FROM python:3.6-slim
+FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y dvipng git && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        dvipng \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m appuser
 
 WORKDIR /app
 
 # 1) install plasTeX (Gerby branch)
-RUN git clone https://github.com/gerby-project/plastex.git && \
+RUN git clone --branch gerby --single-branch https://github.com/gerby-project/plastex.git && \
     cd plastex && \
-    git checkout gerby && \
-    pip install . && \
-    cd ..
+    git reset --hard a75473f890db3d21e3bf76430c5c1ffc0661a69a && \
+    pip install --no-cache-dir . && \
+    cd .. && rm -rf plastex
 
 # 2) install Gerby
 RUN git clone https://github.com/gerby-project/gerby-website.git && \
-    cd gerby-website/gerby/static && \
+    cd gerby-website && \
+    git reset --hard e6c41f5eebcdaedade3dfe7b3dd8a36f967c1336 && \
+    cd gerby/static && \
     git clone https://github.com/aexmachina/jquery-bonsai && \
+    cd jquery-bonsai && \
+    git reset --hard a7f2e280e374ce649b5b543af0102a5ed107b854 && \
+    cd .. && \
     cp jquery-bonsai/jquery.bonsai.css css/ && \
+    rm -rf jquery-bonsai && \
     cd ../.. && \
-    pip install -e . && \
+    pip install --no-cache-dir . && \
+    pip install --no-cache-dir "peewee<3.17" && \
     cd ..
 
-# copy project files
-COPY configuration.py gerby-website/gerby/configuration.py
-COPY document.tex document.tex
-COPY tagger.py tagger.py
-# COPY tags tags 2>/dev/null || true
-
-# 4) setup soft links for plasTeX output
-RUN cd gerby-website/gerby/tools && \
-    ln -s /app/document      document && \
-    ln -s /app/document.paux document.paux && \
-    ln -s /app/tags          tags && \
-    cd /app
-
-# 5) setup soft links for database
+# setup soft links for database
 RUN cd gerby-website && \
     ln -s gerby/tools/hello-world.sqlite hello-world.sqlite && \
-    ln -s gerby/tools/comments.sqlite    comments.sqlite && \
-    cd ..
+    ln -s gerby/tools/comments.sqlite    comments.sqlite
+
+COPY tagger.py /app/tagger.py
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh && chown -R appuser /app
+
+USER appuser
+
+ENV PYTHONPATH=/app/gerby-website
+
+# Users mount their project directory here
+VOLUME /project
 
 EXPOSE 5000
 
-CMD python3 tagger.py >> tags && \
-    plastex --renderer=Gerby ./document.tex && \
-    cd gerby-website/gerby/tools && python3 update.py && \
-    cd /app/gerby-website && \
-    FLASK_APP=gerby python3 -m flask run --host=0.0.0.0
+ENTRYPOINT ["/app/entrypoint.sh"]
