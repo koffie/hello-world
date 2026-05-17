@@ -3,3 +3,5 @@ gerby-website/
 document/*
 *.swp
 *.paux
+comments.sqlite
+hello-world.sqlite
