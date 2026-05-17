@@ -21,7 +21,15 @@ RUN git clone https://github.com/koffie/plastex.git && \
     /app/venv-plastex/bin/pip install --no-cache-dir unidecode && \
     cd .. && rm -rf plastex
 
-# 2) install Gerby into its own venv
+# 2) install plasTeX into the gerby venv as well so update.py can unpickle
+#    .paux files (which contain plasTeX objects) without needing the renderer
+RUN git clone https://github.com/koffie/plastex.git && \
+    cd plastex && \
+    git reset --hard 0719772bae931d356de012ca1518cc3fb8ef34f0 && \
+    /app/venv-gerby/bin/pip install --no-cache-dir . && \
+    cd .. && rm -rf plastex
+
+# 3) install Gerby into its own venv
 RUN git clone https://github.com/gerby-project/gerby-website.git && \
     cd gerby-website && \
     git reset --hard e6c41f5eebcdaedade3dfe7b3dd8a36f967c1336 && \
