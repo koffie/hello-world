@@ -1,14 +1,5 @@
 FROM python:3.12-slim
 
-ARG PLASTEX_REPO=https://github.com/koffie/plastex.git
-ARG PLASTEX_HASH=0719772bae931d356de012ca1518cc3fb8ef34f0
-
-ARG GERBY_REPO=https://github.com/gerby-project/gerby-website.git
-ARG GERBY_HASH=e6c41f5eebcdaedade3dfe7b3dd8a36f967c1336
-
-ARG BONSAI_REPO=https://github.com/aexmachina/jquery-bonsai
-ARG BONSAI_HASH=a7f2e280e374ce649b5b543af0102a5ed107b854
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
         dvipng \
         git \
@@ -23,6 +14,8 @@ RUN python3 -m venv /app/venv-plastex && \
     python3 -m venv /app/venv-gerby
 
 # 1) install plasTeX (koffie fork) into its own venv
+ARG PLASTEX_REPO=https://github.com/koffie/plastex.git
+ARG PLASTEX_HASH=0719772bae931d356de012ca1518cc3fb8ef34f0
 RUN git clone "$PLASTEX_REPO" plastex && \
     cd plastex && \
     git reset --hard "$PLASTEX_HASH" && \
@@ -39,6 +32,10 @@ RUN git clone "$PLASTEX_REPO" plastex && \
     cd .. && rm -rf plastex
 
 # 3) install Gerby into its own venv
+ARG GERBY_REPO=https://github.com/koffie/gerby-website.git
+ARG GERBY_HASH=052565e9194acdd5eacb16718aae2121f0186a1c
+ARG BONSAI_REPO=https://github.com/aexmachina/jquery-bonsai
+ARG BONSAI_HASH=a7f2e280e374ce649b5b543af0102a5ed107b854
 RUN git clone "$GERBY_REPO" gerby-website && \
     cd gerby-website && \
     git reset --hard "$GERBY_HASH" && \
@@ -50,8 +47,9 @@ RUN git clone "$GERBY_REPO" gerby-website && \
     cp jquery-bonsai/jquery.bonsai.css css/ && \
     rm -rf jquery-bonsai && \
     cd ../.. && \
-    /app/venv-gerby/bin/pip install --no-cache-dir . && \
-    /app/venv-gerby/bin/pip install --no-cache-dir "peewee<3.17" && \
+    . /app/venv-gerby/bin/activate && \
+    pip install --no-cache-dir poetry && \
+    poetry install --only main && \
     cd ..
 
 COPY tagger.py /app/tagger.py
