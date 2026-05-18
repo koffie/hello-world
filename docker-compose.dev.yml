@@ -1,6 +1,14 @@
 services:
   gerby:
-    build: .
+    build:
+      context: .
+      args:
+        PLASTEX_REPO: https://github.com/koffie/plastex.git
+        PLASTEX_HASH: 0719772bae931d356de012ca1518cc3fb8ef34f0
+        GERBY_REPO: https://github.com/gerby-project/gerby-website.git
+        GERBY_HASH: e6c41f5eebcdaedade3dfe7b3dd8a36f967c1336
+        BONSAI_REPO: https://github.com/aexmachina/jquery-bonsai
+        BONSAI_HASH: a7f2e280e374ce649b5b543af0102a5ed107b854
     volumes:
       - .:/project
       - /Users/mderickx/code/one_project_to_rule_them_all/libs/gerby-website:/app/gerby-website

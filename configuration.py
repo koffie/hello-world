@@ -1,12 +1,12 @@
 # configuration for the website
-COMMENTS = "comments.sqlite"
-DATABASE = "hello-world.sqlite"
+COMMENTS = "/project/comments.sqlite"
+DATABASE = "/project/hello-world.sqlite"
 UNIT = "section"
 DEPTH = 0
 
 # configuration for the import
-PATH = "document"
-PAUX = "document.paux"
-TAGS = "tags"
+PATH = "/project/document"
+PAUX = "/project/document.paux"
+TAGS = "/project/tags"
 PDF = ""
 
