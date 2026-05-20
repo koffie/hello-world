@@ -3,7 +3,6 @@ FROM python:3.12-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
         dvipng \
         git \
-        inotify-tools \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m appuser
@@ -49,10 +48,7 @@ RUN git clone "$GERBY_REPO" gerby-website && \
     poetry install --only main && \
     cd ..
 
-COPY --chown=appuser:appuser tagger.py /app/tagger.py
-COPY --chown=appuser:appuser build.sh /app/build.sh
-COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
-COPY --chown=appuser:appuser entrypoint-watch.sh /app/entrypoint-watch.sh
+COPY --chown=appuser:appuser tagger.py build.sh entrypoint.sh entrypoint-watch.sh /app/
 RUN chmod +x /app/build.sh /app/entrypoint.sh /app/entrypoint-watch.sh
 
 # PYTHONPATH lets the gerby venv pick up the user-supplied configuration.py

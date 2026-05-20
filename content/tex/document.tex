@@ -27,14 +27,42 @@
 \section{A first section}
 \label{section:first}
 
-\begin{lemma}
+\begin{lemma}[Pythagorean theorem]
   \label{lemma:pythagoras}
-  $a^2=b^2+c^2$ \cite{Euclid}
+  Let $a$, $b$, and $c$ be the sides of a right triangle, with $c$ being the hypotenuse. Then $a^2=b^2+c^2$ \cite{Euclid}.
 \end{lemma}
 \begin{proof}
   This is a consequence of the axioms of Euclidean geometry. It is left as an 
   exercise to the reader to verify that the proof of this lemma is correct.
 \end{proof}
+
+\begin{definition}[Pythagorean triple]
+  \label{definition:pythagorean-triple}
+  A triple of positive integers $(a,b,c)$ is called a \emph{Pythagorean triple} if $a^2=b^2+c^2$.
+\end{definition}
+
+\begin{theorem}[Pythagorean triples]
+  \label{theorem:pythagorean-triple}
+  There are infinitely many Pythagorean triples.
+\end{theorem}
+\begin{proof}
+  For each positive integer $n$, we have the triple $(a,b,c)=(n^2+1, n^2-1, 2n)$, which satisfies $a^2=b^2+c^2$. Indeed, we have
+  \begin{align*}
+    a^2 &= (n^2+1)^2 = n^4 + 2n^2 + 1, \\
+    b^2 &= (n^2-1)^2 = n^4 - 2n^2 + 1, \\ 
+    c^2 &= (2n)^2 = 4n^2.
+  \end{align*}
+  Therefore,
+  \begin{align*}
+    a^2 - b^2 &= (n^4 + 2n^2 + 1) - (n^4 - 2n^2 + 1) = 4n^2 = c^2.
+  \end{align*}
+\end{proof}
+
+\begin{example}
+  \label{example:pythagorean-triple}
+  The triple $(3,4,5)$ is a Pythagorean triple, since $3^2=4^2+5^2$. This example is a special case of the construction given in the proof of \Cref{theorem:pythagorean-triple}, since it corresponds to the case $n=2$.
+\end{example}
+
 
 \section{A second section}
 \label{section:second}
@@ -45,6 +73,7 @@
 
 \section{A third section}
 \label{section:third}
+
 
 \section{A fourth section}
 \label{section:fourth}
