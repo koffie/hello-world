@@ -2,4 +2,19 @@
 __pycache__
 *.pyc
 *.pyo
+
+# project content — mounted at runtime, not baked in
 build/
+content/
+document/
+document.paux
+tags
+*.sqlite
+
+# CI and docs
+.github/
+.travis.yml
+README.md
+
+# compose files
+docker-compose*.yml

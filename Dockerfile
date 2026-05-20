@@ -3,17 +3,21 @@ FROM python:3.12-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
         dvipng \
         git \
+        inotify-tools \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m appuser
 
 WORKDIR /app
+RUN chown appuser /app
+
+USER appuser
 
 # create isolated virtual environments
 RUN python3 -m venv /app/venv-plastex && \
     python3 -m venv /app/venv-gerby
 
-# 1) install plasTeX (koffie fork) into its own venv
+# 1) install plasTeX (koffie fork) into both venvs in a single clone
 ARG PLASTEX_REPO=https://github.com/koffie/plastex.git
 ARG PLASTEX_HASH=0719772bae931d356de012ca1518cc3fb8ef34f0
 RUN git clone "$PLASTEX_REPO" plastex && \
@@ -21,17 +25,10 @@ RUN git clone "$PLASTEX_REPO" plastex && \
     git reset --hard "$PLASTEX_HASH" && \
     /app/venv-plastex/bin/pip install --no-cache-dir . && \
     /app/venv-plastex/bin/pip install --no-cache-dir unidecode && \
-    cd .. && rm -rf plastex
-
-# 2) install plasTeX into the gerby venv as well so update.py can unpickle
-#    .paux files (which contain plasTeX objects) without needing the renderer
-RUN git clone "$PLASTEX_REPO" plastex && \
-    cd plastex && \
-    git reset --hard "$PLASTEX_HASH" && \
     /app/venv-gerby/bin/pip install --no-cache-dir . && \
     cd .. && rm -rf plastex
 
-# 3) install Gerby into its own venv
+# 2) install Gerby into its own venv
 ARG GERBY_REPO=https://github.com/koffie/gerby-website.git
 ARG GERBY_HASH=052565e9194acdd5eacb16718aae2121f0186a1c
 ARG BONSAI_REPO=https://github.com/aexmachina/jquery-bonsai
@@ -52,11 +49,11 @@ RUN git clone "$GERBY_REPO" gerby-website && \
     poetry install --only main && \
     cd ..
 
-COPY tagger.py /app/tagger.py
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh && chown -R appuser /app
-
-USER appuser
+COPY --chown=appuser:appuser tagger.py /app/tagger.py
+COPY --chown=appuser:appuser build.sh /app/build.sh
+COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
+COPY --chown=appuser:appuser entrypoint-watch.sh /app/entrypoint-watch.sh
+RUN chmod +x /app/build.sh /app/entrypoint.sh /app/entrypoint-watch.sh
 
 # PYTHONPATH lets the gerby venv pick up the user-supplied configuration.py
 # from the source tree instead of the installed package default
