@@ -40,7 +40,7 @@ Tags are stored in `content/tags`, one per line in `tag,label` format. The file 
 1. Replace `content/tex/document.tex` with your own LaTeX source.
 2. Build and run the container — `tagger.py` will assign tags to all your `\label{}`s on first boot.
 3. Edit `content/configuration.py` to set your project title, domain, and contact details.
-4. Optionally fill in `content/support` and `CONTRIBUTORS` (see [Optional pages](#optional-pages) below).
+4. Optionally fill in `content/support` and `content/CONTRIBUTORS` (see [Optional pages](#optional-pages) below).
 
 If you rename the `.tex` file, update the `plastex` call in `entrypoint.sh` and the CI workflow accordingly.
 
@@ -53,25 +53,27 @@ content/
     document-tikz.tex   # TikZ variant
   configuration.py      # Gerby configuration (edit this)
   tags                  # Tag registry (managed by tagger.py)
-  support               # Optional: acknowledgements bullet points
-CONTRIBUTORS            # Optional: contributor names, one per line
+  support               # Optional: acknowledgements, one bullet point per line
+  CONTRIBUTORS          # Optional: contributor names, one per line
 build/                  # Generated — gitignored, created at runtime
   document/             # plasTeX HTML output
   document.paux         # plasTeX auxiliary file
-  hello-world.sqlite    # Main content database
+  tags.sqlite           # Main content database
   comments.sqlite       # Comments database
 ```
 
 ## Configuration
 
-Edit `content/configuration.py` to set your project title, domain, and other options. The paths in that file are pre-configured for the Docker setup and should not need changing.
+Edit `content/configuration.py` to set your project title, domain, and other options.
+
+The file has two sections. The top section is what you edit: `BUILD_DIR` and `CONTENT_DIR` (absolute paths to the `build/` and `content/` directories — pre-set to `/project/build` and `/project/content` for Docker, change them to match your local checkout for non-Docker use), and the project identity fields. The bottom section derives all internal file paths from those two variables — do not edit it.
 
 ## Optional pages
 
 Two pages are driven by plain-text files you can fill in:
 
 - **`/acknowledgements`** — add one entry per line to `content/support`. Lines starting with `%` are treated as comments and ignored.
-- **`/contributors`** — add one name per line to `CONTRIBUTORS`. Same comment syntax.
+- **`/contributors`** — add one name per line to `content/CONTRIBUTORS`. Same comment syntax.
 
 If either file is absent the corresponding page still works, it will just have an empty list.
 

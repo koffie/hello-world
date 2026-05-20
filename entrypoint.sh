@@ -14,16 +14,6 @@ fi
 # make configuration available to the gerby package
 cp /project/content/configuration.py /app/gerby-website/gerby/configuration.py
 
-# copy optional content files into gerby's tex/ directory if present
-if [[ -f /project/CONTRIBUTORS ]]; then
-  mkdir -p /app/gerby-website/gerby/tex
-  cp /project/CONTRIBUTORS /app/gerby-website/gerby/tex/CONTRIBUTORS
-fi
-if [[ -f /project/content/support ]]; then
-  mkdir -p /app/gerby-website/gerby/tex/documentation
-  cp /project/content/support /app/gerby-website/gerby/tex/documentation/support
-fi
-
 # ensure build directory exists
 mkdir -p /project/build
 
