@@ -1,7 +1,5 @@
 % Contributors file.
 % Lines starting with % are comments and are ignored.
 % Each non-empty line is displayed as a contributor name on the /contributors page.
-%
-% Example entries (uncomment or replace with your own):
-% Jane Doe
-% John Smith
+Jane Doe
+John Smith

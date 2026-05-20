@@ -1,7 +1,5 @@
 % Acknowledgements / support file.
 % Lines starting with % are comments and are ignored.
 % Each non-empty line becomes a bullet point on the /acknowledgements page.
-%
-% Example entries (uncomment or replace with your own):
-% The University of Example hosted this project and employs its lead researcher.
-% This project was supported by an Example Foundation grant.
+This project is hosted by Example University.
+This project was supported by a grant from the Example Foundation.
