@@ -51,6 +51,7 @@ content/
   tex/
     document.tex        # LaTeX source (edit this)
     document-tikz.tex   # TikZ variant
+    references.bib      # Optional: BibTeX bibliography
   configuration.py      # Gerby configuration (edit this)
   tags                  # Tag registry (managed by tagger.py)
   support               # Optional: acknowledgements, one bullet point per line
@@ -66,7 +67,7 @@ build/                  # Generated — gitignored, created at runtime
 
 Edit `content/configuration.py` to set your project title, domain, and other options.
 
-The file has two sections. The top section is what you edit: `BUILD_DIR` and `CONTENT_DIR` (absolute paths to the `build/` and `content/` directories — pre-set to `/project/build` and `/project/content` for Docker, change them to match your local checkout for non-Docker use), and the project identity fields. The bottom section derives all internal file paths from those two variables — do not edit it.
+`BUILD_DIR` and `CONTENT_DIR` are absolute paths to the `build/` and `content/` directories. They are pre-set to `/project/build` and `/project/content` for Docker; change them to match your local checkout when running without Docker. All other fields are project identity values shown on the site.
 
 ## Optional pages
 

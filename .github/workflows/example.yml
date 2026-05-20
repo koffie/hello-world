@@ -42,5 +42,7 @@ jobs:
         run: |
           mkdir -p build
           python3 tagger.py content/tex/document.tex content/tags >> content/tags
+          cp content/tags build/tags
+          cp content/tex/*.bib build/ 2>/dev/null || true
           cd build && plastex --renderer=Gerby ../content/tex/document.tex
           ls build/document
