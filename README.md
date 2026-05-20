@@ -25,6 +25,8 @@ docker run --rm -p 8080:5000 -v "$(pwd):/project" gerby-hello-world
 
 Open http://localhost:8080. The hello-world document should be live.
 
+To have the site update automatically as you edit your LaTeX source, see [Writing mode (live recompile)](#writing-mode-live-recompile).
+
 ## The tag system
 
 Tags are the core concept of Gerby. Every `\label{...}` in your LaTeX source is automatically assigned a short permanent identifier — a four-character tag like `0001`, `0A3F`, etc. These tags are:
@@ -89,9 +91,12 @@ docker run --rm -p 8080:5000 -v "$(pwd):/project" gerby-hello-world
 
 The site will be available at http://localhost:8080.
 
-### Development (with live reload)
+### Writing mode (live recompile)
 
-Uses the provided `docker-compose.dev.yml` to mount a local `gerby-website` source tree into the container. Flask runs in debug mode and reloads automatically when you edit Python files — no rebuild needed.
+Uses the provided `docker-compose.dev.yml`, which runs two services:
+
+- **`gerby`** — serves the site with Flask in debug mode. Automatically reloads when you edit Python or template files in `gerby-website` — no rebuild needed.
+- **`watcher`** — polls `content/tex/` every 2 seconds and re-runs the full build pipeline (tagger → plasTeX → database import) whenever a `.tex` file changes. Just save your file and refresh the browser.
 
 ```bash
 docker compose -f docker-compose.dev.yml up
