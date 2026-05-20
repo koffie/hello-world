@@ -1,5 +1,11 @@
+import argparse
 import glob
 import re
+
+parser = argparse.ArgumentParser(description="Assign tags to LaTeX labels.")
+parser.add_argument("tex", nargs="?", default="document.tex", help="LaTeX source file (default: document.tex)")
+parser.add_argument("tags", nargs="?", default="tags", help="Tags file to read existing tags from (default: tags)")
+args = parser.parse_args()
 
 # no I, no O
 CHARACTERS = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ"
@@ -28,7 +34,7 @@ labels = dict()
 inactive = []
 
 try:
-  with open("tags") as f:
+  with open(args.tags) as f:
     for line in f:
       # actual tag
       if not line.startswith("#"):
@@ -50,7 +56,7 @@ except IndexError:
 
 
 #filenames = glob.glob("*.tex")
-filenames = ["document.tex"]
+filenames = [args.tex]
 
 # where we should start
 i = last + 1

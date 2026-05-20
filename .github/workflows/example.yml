@@ -40,6 +40,7 @@ jobs:
           cd ..
       - name: Run tagger and plasTeX
         run: |
-          python3 tagger.py >> tags
-          plastex --renderer=Gerby document.tex
-          ls document
+          mkdir -p build
+          python3 tagger.py content/tex/document.tex content/tags >> content/tags
+          cd build && plastex --renderer=Gerby ../content/tex/document.tex
+          ls build/document

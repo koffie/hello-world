@@ -1,7 +1,2 @@
-plastex/
-gerby-website/
-document/*
+build/
 *.swp
-*.paux
-comments.sqlite
-hello-world.sqlite
