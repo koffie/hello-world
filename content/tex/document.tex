@@ -1,5 +1,6 @@
 \documentclass{report}
 \usepackage{amssymb, amsmath, hyperref}
+\usepackage[backref]{natbib}
 
 \theoremstyle{plain}
 \newtheorem{theorem}[subsection]{Theorem}
@@ -28,7 +29,7 @@
 
 \begin{lemma}
   \label{lemma:pythagoras}
-  $a^2=b^2+c^2$
+  $a^2=b^2+c^2$ \cite{Euclid}
 \end{lemma}
 
 \section{A second section}
@@ -43,5 +44,8 @@
 
 \section{A fourth section}
 \label{section:fourth}
+
+\bibliographystyle{amsplain}
+\bibliography{references}
 
 \end{document}

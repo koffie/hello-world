@@ -21,8 +21,9 @@ mkdir -p /project/build
 /app/venv-gerby/bin/python3 /app/tagger.py /project/content/tex/document.tex /project/content/tags >> /project/content/tags
 
 # 2) convert to HTML: run plastex from build/ so output lands in build/document/
-#    plastex's Gerby renderer looks for the tags file relative to its working directory
+#    plastex's Gerby renderer looks for the tags file and any .bib files relative to its working directory
 cp /project/content/tags /project/build/tags
+cp /project/content/tex/*.bib /project/build/ 2>/dev/null || true
 cd /project/build
 rm -rf /project/build/document
 /app/venv-plastex/bin/plastex --renderer=Gerby /project/content/tex/document.tex
