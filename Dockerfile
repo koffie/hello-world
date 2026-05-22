@@ -29,7 +29,7 @@ RUN git clone "$PLASTEX_REPO" plastex && \
 
 # 2) install Gerby into its own venv
 ARG GERBY_REPO=https://github.com/koffie/gerby-website.git
-ARG GERBY_HASH=052565e9194acdd5eacb16718aae2121f0186a1c
+ARG GERBY_HASH=79383b8798f6c8dddfb9bf5e043d539dc9716c7f
 ARG BONSAI_REPO=https://github.com/aexmachina/jquery-bonsai
 ARG BONSAI_HASH=a7f2e280e374ce649b5b543af0102a5ed107b854
 RUN git clone "$GERBY_REPO" gerby-website && \
