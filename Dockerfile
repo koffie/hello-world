@@ -23,7 +23,7 @@ RUN git clone "$PLASTEX_REPO" plastex && \
     cd plastex && \
     git reset --hard "$PLASTEX_HASH" && \
     /app/venv-plastex/bin/pip install --no-cache-dir . && \
-    /app/venv-plastex/bin/pip install --no-cache-dir unidecode && \
+    /app/venv-plastex/bin/pip install --no-cache-dir unidecode beautifulsoup4 && \
     /app/venv-gerby/bin/pip install --no-cache-dir . && \
     cd .. && rm -rf plastex
 
