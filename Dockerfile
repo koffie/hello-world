@@ -16,7 +16,7 @@ USER appuser
 RUN python3 -m venv /app/venv-plastex && \
     python3 -m venv /app/venv-gerby
 
-# 1) install plasTeX (koffie fork) into both venvs in a single clone
+# Component version pins — keep ARG defaults in sync with versions.env
 ARG PLASTEX_REPO=https://github.com/koffie/plastex.git
 ARG PLASTEX_HASH=0719772bae931d356de012ca1518cc3fb8ef34f0
 RUN git clone "$PLASTEX_REPO" plastex && \
