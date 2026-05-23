@@ -15,9 +15,11 @@ cd "$OUT"
 
 cp "$TEX_DIR"/*.bib . 2>/dev/null || true
 
-# Generate .bbl
+# Generate .bbl and populate .aux with \bibcite entries
 BIBINPUTS="$TEX_DIR:" latex "$TEX"
 BIBINPUTS="$TEX_DIR:" bibtex document
+# Second latex run writes \bibcite commands to .aux so plastex gets author-year labels
+BIBINPUTS="$TEX_DIR:" latex "$TEX"
 
 # Render to HTML
 /app/venv-plastex/bin/plastex --config="$TEX_DIR/document.cfg" "$TEX"
