@@ -1,6 +1,20 @@
 \documentclass{report}
+\iffalse
+% gerby+plastex
 \usepackage{amssymb, amsmath, hyperref}
 \usepackage[backref]{natbib}
+\else
+% pure plastex / pdflatex
+\usepackage{amssymb, amsmath, amsthm, hyperref}
+\usepackage{natbib}
+\fi
+\newif\ifplastex
+\plastexfalse
+\ifplastex\else
+\usepackage{cleveref}
+\fi
+\usepackage{tikz}
+\usepackage{tikz-cd}
 
 \theoremstyle{plain}
 \newtheorem{theorem}[subsection]{Theorem}
@@ -25,6 +39,21 @@
 \label{chapter:first}
 
 \section{A first section}
+
+We can draw pictures using the \texttt{tikz} package.
+\begin{center}
+\begin{tikzpicture}
+  \draw (0,0) --(1,2) -- (2,0) -- (0,0);
+\end{tikzpicture}
+\end{center}
+
+We can also use the \texttt{tikz-cd} package for drawing commutative diagrams.
+\begin{center}
+\begin{tikzcd}
+  a \arrow[r] & b
+\end{tikzcd}
+\end{center}
+
 \label{section:first}
 
 \begin{lemma}[Pythagorean theorem]
@@ -35,6 +64,16 @@
   This is a consequence of the axioms of Euclidean geometry. It is left as an 
   exercise to the reader to verify that the proof of this lemma is correct.
 \end{proof}
+
+
+
+
+\section{A second section}
+\label{section:second}
+
+
+\chapter{A second chapter}
+\label{chapter:second}
 
 \begin{definition}[Pythagorean triple]
   \label{definition:pythagorean-triple}
@@ -63,14 +102,6 @@
   The triple $(3,4,5)$ is a Pythagorean triple, since $3^2=4^2+5^2$. This example is a special case of the construction given in the proof of \Cref{theorem:pythagorean-triple}, since it corresponds to the case $n=2$.
 \end{example}
 
-
-\section{A second section}
-\label{section:second}
-
-
-\chapter{A second chapter}
-\label{chapter:second}
-
 \section{A third section}
 \label{section:third}
 
@@ -78,7 +109,7 @@
 \section{A fourth section}
 \label{section:fourth}
 
-\bibliographystyle{amsplain}
+\bibliographystyle{plainnat}
 \bibliography{references}
 
 \end{document}

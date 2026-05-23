@@ -108,6 +108,28 @@ To rebuild the image (e.g. after changing system dependencies):
 docker compose -f docker-compose.dev.yml up --build
 ```
 
+## Rendering to static HTML with upstream plasTeX
+
+In addition to the full Gerby stack, the repository ships a lightweight **plasTeX-only** workflow that renders the document to static HTML without Flask or the tag database. This is useful for checking the HTML output of upstream plasTeX directly, or for iterating on the document without starting the full Gerby stack.
+
+Build the `plastex` image target and run it as a one-shot container:
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm plastex
+```
+
+Output is written to `build/plastex/` in your project directory. To stop a running container:
+
+```bash
+docker compose -f docker-compose.dev.yml rm -sf plastex
+```
+
+To rebuild the image (e.g. after changing system dependencies):
+
+```bash
+docker compose -f docker-compose.dev.yml build plastex
+```
+
 ## CI
 
 The GitHub Actions workflow in `.github/workflows/example.yml` runs plasTeX on `content/tex/document.tex` to verify the document compiles correctly. The badge above reflects its status.

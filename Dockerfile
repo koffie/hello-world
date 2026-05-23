@@ -1,4 +1,5 @@
-FROM python:3.12-slim
+# ── base ──────────────────────────────────────────────────────────────────
+FROM python:3.12-slim AS base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         dvipng \
@@ -6,9 +7,42 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m appuser
-
 WORKDIR /app
 RUN chown appuser /app
+
+VOLUME /project
+
+# ── plastex ───────────────────────────────────────────────────────────────
+FROM base AS plastex
+
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        bibtex2html \
+        dvisvgm \
+        ghostscript \
+        texlive-latex-extra \
+        texlive-pictures \
+        texlive-fonts-recommended \
+        texlive-bibtex-extra \
+    && rm -rf /var/lib/apt/lists/*
+USER appuser
+
+ARG PLASTEX_REPO=https://github.com/plastex/plastex.git
+ARG PLASTEX_HASH=4fe23e25565a4788f07077076211d21630a81cb0
+RUN python3 -m venv /app/venv-plastex && \
+    git clone "$PLASTEX_REPO" plastex-src && \
+    cd plastex-src && \
+    git reset --hard "$PLASTEX_HASH" && \
+    /app/venv-plastex/bin/pip install --no-cache-dir . && \
+    cd .. && rm -rf plastex-src
+
+COPY --chown=appuser:appuser plastex-entrypoint.sh /app/
+RUN chmod +x /app/plastex-entrypoint.sh
+
+ENTRYPOINT ["/app/plastex-entrypoint.sh"]
+
+# ── gerby ─────────────────────────────────────────────────────────────────
+FROM base AS gerby
 
 USER appuser
 
@@ -27,7 +61,6 @@ RUN git clone "$PLASTEX_REPO" plastex && \
     /app/venv-gerby/bin/pip install --no-cache-dir . && \
     cd .. && rm -rf plastex
 
-# 2) install Gerby into its own venv
 ARG GERBY_REPO=https://github.com/koffie/gerby-website.git
 ARG GERBY_HASH=79383b8798f6c8dddfb9bf5e043d539dc9716c7f
 ARG BONSAI_REPO=https://github.com/aexmachina/jquery-bonsai
@@ -51,8 +84,6 @@ RUN git clone "$GERBY_REPO" gerby-website && \
 COPY --chown=appuser:appuser tagger.py build.sh entrypoint.sh entrypoint-watch.sh /app/
 RUN chmod +x /app/build.sh /app/entrypoint.sh /app/entrypoint-watch.sh
 
-# PYTHONPATH lets the gerby venv pick up the user-supplied configuration.py
-# from the source tree instead of the installed package default
 ENV PYTHONPATH=/app/gerby-website
 
 # Users mount their project directory here

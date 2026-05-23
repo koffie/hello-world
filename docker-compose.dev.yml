@@ -1,3 +1,10 @@
+x-plastex-build: &plastex-build
+  context: .
+  target: plastex
+  args:
+    PLASTEX_REPO: https://github.com/plastex/plastex.git
+    PLASTEX_HASH: 4fe23e25565a4788f07077076211d21630a81cb0
+
 x-gerby-build: &gerby-build
   context: .
   args:
@@ -13,6 +20,12 @@ x-gerby-volumes: &gerby-volumes
   - /Users/mderickx/code/one_project_to_rule_them_all/libs/gerby-website:/app/gerby-website
 
 services:
+  plastex:
+    build: *plastex-build
+    volumes:
+      - .:/project
+    restart: "no"
+
   gerby:
     build: *gerby-build
     volumes: *gerby-volumes
