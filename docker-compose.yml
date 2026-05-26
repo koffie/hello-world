@@ -1,0 +1,83 @@
+x-plastex-build: &plastex-build
+  context: .
+  target: plastex
+  args:
+    PLASTEX_REPO: https://github.com/plastex/plastex.git
+    PLASTEX_HASH: 4fe23e25565a4788f07077076211d21630a81cb0
+
+x-gerby-build: &gerby-build
+  context: .
+  args:
+    GERBY_PLASTEX_REPO: https://github.com/koffie/gerby-plastex.git
+    GERBY_PLASTEX_HASH: 0719772bae931d356de012ca1518cc3fb8ef34f0
+    GERBY_REPO: https://github.com/koffie/gerby-website.git
+    GERBY_HASH: 052565e9194acdd5eacb16718aae2121f0186a1c
+    BONSAI_REPO: https://github.com/aexmachina/jquery-bonsai
+    BONSAI_HASH: a7f2e280e374ce649b5b543af0102a5ed107b854
+
+x-gerby-plugin-build: &gerby-plugin-build
+  context: .
+  target: gerby-plugin
+  args:
+    PLASTEX_REPO: https://github.com/plastex/plastex.git
+    PLASTEX_HASH: 4fe23e25565a4788f07077076211d21630a81cb0
+    PLASTEX_GERBY_PLUGIN_REPO: https://github.com/koffie/plastex-gerby-plugin.git
+    PLASTEX_GERBY_PLUGIN_HASH: 4a947cd1d31a0a5e936f167cb7c909e28e5a4a9d
+    GERBY_REPO: https://github.com/koffie/gerby-website.git
+    GERBY_HASH: 052565e9194acdd5eacb16718aae2121f0186a1c
+    BONSAI_REPO: https://github.com/aexmachina/jquery-bonsai
+    BONSAI_HASH: a7f2e280e374ce649b5b543af0102a5ed107b854
+
+x-gerby-volumes: &gerby-volumes
+  - .:/project
+
+x-gerby-plugin-volumes: &gerby-plugin-volumes
+  - .:/project
+
+services:
+  plastex:
+    build: *plastex-build
+    profiles: [plastex]
+    volumes:
+      - .:/project
+    restart: "no"
+
+  gerby:
+    build: *gerby-build
+    profiles: [gerby]
+    volumes: *gerby-volumes
+    ports:
+      - "8080:5000"
+    environment:
+      FLASK_DEBUG: "1"
+      PYTHONPATH: /app/gerby-website
+
+  watcher:
+    build: *gerby-build
+    profiles: [gerby]
+    volumes: *gerby-volumes
+    environment:
+      PYTHONPATH: /app/gerby-website
+    entrypoint: ["/app/entrypoint-watch.sh"]
+    depends_on:
+      - gerby
+
+  gerby-plugin:
+    build: *gerby-plugin-build
+    profiles: [gerby-plugin]
+    volumes: *gerby-plugin-volumes
+    ports:
+      - "8081:5000"
+    environment:
+      FLASK_DEBUG: "1"
+      PYTHONPATH: /app/gerby-website
+
+  watcher-plugin:
+    build: *gerby-plugin-build
+    profiles: [gerby-plugin]
+    volumes: *gerby-plugin-volumes
+    environment:
+      PYTHONPATH: /app/gerby-website
+    entrypoint: ["/app/entrypoint-watch.sh"]
+    depends_on:
+      - gerby-plugin

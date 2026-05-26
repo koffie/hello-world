@@ -82,53 +82,44 @@ If either file is absent the corresponding page still works, it will just have a
 
 ## Running locally with Docker
 
-### Standalone (production-like)
+`docker-compose.dev.yml` organises services into three profiles. The `.env` file sets `gerby` as the default, so a plain `up` starts the `gerby` profile:
 
 ```bash
-docker build -t gerby-hello-world .
-docker run --rm -p 8080:5000 -v "$(pwd):/project" gerby-hello-world
+docker compose up
 ```
 
-The site will be available at http://localhost:8080.
+To use a different profile, pass `--profile` explicitly (this overrides `.env`):
 
-### Writing mode (live recompile)
+| Profile | Command | What it does |
+|---------|---------|--------------|
+| `plastex` | `docker compose --profile plastex up` | Runs plasTeX once and exits. Output in `build/plastex/`. |
+| `gerby` | `docker compose up` | Serves the site at http://localhost:8080 using gerby-plastex. Watches `content/tex/` and rebuilds on change. |
+| `gerby-plugin` | `docker compose --profile gerby-plugin up` | Same as `gerby` but uses upstream plasTeX + the standalone `plastex-gerby` plugin. Served at http://localhost:8081. |
 
-Uses the provided `docker-compose.dev.yml`, which runs two services:
-
-- **`gerby`** — serves the site with Flask in debug mode. Automatically reloads when you edit Python or template files in `gerby-website` — no rebuild needed.
-- **`watcher`** — polls `content/tex/` every 2 seconds and re-runs the full build pipeline (tagger → plasTeX → database import) whenever a `.tex` file changes. Just save your file and refresh the browser.
+Add `--build` to rebuild the image (e.g. after changing system dependencies):
 
 ```bash
-docker compose -f docker-compose.dev.yml up
+docker compose up --build
 ```
 
-To rebuild the image (e.g. after changing system dependencies):
+### Profile details
 
-```bash
-docker compose -f docker-compose.dev.yml up --build
-```
+#### `plastex`
 
-## Rendering to static HTML with upstream plasTeX
+A lightweight one-shot container that renders the document to static HTML with upstream plasTeX, without Flask or the tag database. Useful for checking plasTeX output in isolation.
 
-In addition to the full Gerby stack, the repository ships a lightweight **plasTeX-only** workflow that renders the document to static HTML without Flask or the tag database. This is useful for checking the HTML output of upstream plasTeX directly, or for iterating on the document without starting the full Gerby stack.
+#### `gerby`
 
-Build the `plastex` image target and run it as a one-shot container:
+Two services:
 
-```bash
-docker compose -f docker-compose.dev.yml run --rm plastex
-```
+- **`gerby`** — serves the site with Flask in debug mode. Automatically reloads when you edit Python or template files in `gerby-website`.
+- **`watcher`** — polls `content/tex/` every 2 seconds and re-runs the full build pipeline (tagger → plasTeX → database import) whenever a `.tex` file changes.
 
-Output is written to `build/plastex/` in your project directory. To stop a running container:
+Uses [gerby-plastex](https://github.com/koffie/gerby-plastex), a fork of plasTeX with the Gerby renderer bundled in.
 
-```bash
-docker compose -f docker-compose.dev.yml rm -sf plastex
-```
+#### `gerby-plugin`
 
-To rebuild the image (e.g. after changing system dependencies):
-
-```bash
-docker compose -f docker-compose.dev.yml build plastex
-```
+Same two-service setup as `gerby` (on port 8081), but uses upstream plasTeX together with the standalone [plastex-gerby-plugin](https://github.com/koffie/plastex-gerby-plugin) instead of the gerby-plastex fork.
 
 ## CI
 
