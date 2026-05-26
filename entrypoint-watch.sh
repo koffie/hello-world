@@ -13,7 +13,7 @@ while true; do
   if find "$WATCH_DIR" -name '*.tex' -newer "$SENTINEL" | grep -q .; then
     echo "Watcher: change detected, rebuilding..."
     if /app/build.sh; then
-      echo "Watcher: rebuild complete — refresh your browser"
+      echo "Watcher: rebuild complete - refresh your browser"
     else
       echo "Watcher: rebuild failed, check output above"
     fi

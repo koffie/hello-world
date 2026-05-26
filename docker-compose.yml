@@ -7,11 +7,12 @@ x-plastex-build: &plastex-build
 
 x-gerby-build: &gerby-build
   context: .
+  target: gerby
   args:
     GERBY_PLASTEX_REPO: https://github.com/koffie/gerby-plastex.git
     GERBY_PLASTEX_HASH: 0719772bae931d356de012ca1518cc3fb8ef34f0
     GERBY_REPO: https://github.com/koffie/gerby-website.git
-    GERBY_HASH: 052565e9194acdd5eacb16718aae2121f0186a1c
+    GERBY_HASH: 79383b8798f6c8dddfb9bf5e043d539dc9716c7f
     BONSAI_REPO: https://github.com/aexmachina/jquery-bonsai
     BONSAI_HASH: a7f2e280e374ce649b5b543af0102a5ed107b854
 

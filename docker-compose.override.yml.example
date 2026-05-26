@@ -2,7 +2,7 @@
 # a local clone of gerby-website into the containers. This lets you edit
 # gerby-website templates and Python files without rebuilding the image.
 #
-# docker-compose.override.yml is gitignored — it is personal to your machine.
+# docker-compose.override.yml is gitignored - it is personal to your machine.
 
 services:
   gerby:

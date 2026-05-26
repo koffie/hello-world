@@ -29,18 +29,18 @@ To have the site update automatically as you edit your LaTeX source, see [Writin
 
 ## The tag system
 
-Tags are the core concept of Gerby. Every `\label{...}` in your LaTeX source is automatically assigned a short permanent identifier — a four-character tag like `0001`, `0A3F`, etc. These tags are:
+Tags are the core concept of Gerby. Every `\label{...}` in your LaTeX source is automatically assigned a short permanent identifier - a four-character tag like `0001`, `0A3F`, etc. These tags are:
 
-- **stable** — once assigned, a tag always points to the same result, even if the document is reorganised or renumbered
-- **linkable** — each tag gets its own URL, e.g. `/tag/0001`
-- **citable** — readers can reference individual results without worrying about section numbers changing
+- **stable** - once assigned, a tag always points to the same result, even if the document is reorganised or renumbered
+- **linkable** - each tag gets its own URL, e.g. `/tag/0001`
+- **citable** - readers can reference individual results without worrying about section numbers changing
 
-Tags are stored in `content/tags`, one per line in `tag,label` format. The file is managed by `tagger.py`, which runs automatically on startup and appends new tags for any labels it hasn't seen before. **Never edit `content/tags` by hand** — only add or remove labels in your `.tex` source.
+Tags are stored in `content/tags`, one per line in `tag,label` format. The file is managed by `tagger.py`, which runs automatically on startup and appends new tags for any labels it hasn't seen before. **Never edit `content/tags` by hand** - only add or remove labels in your `.tex` source.
 
 ## Getting started with your own document
 
 1. Replace `content/tex/document.tex` with your own LaTeX source.
-2. Build and run the container — `tagger.py` will assign tags to all your `\label{}`s on first boot.
+2. Build and run the container - `tagger.py` will assign tags to all your `\label{}`s on first boot.
 3. Edit `content/configuration.py` to set your project title, domain, and contact details.
 4. Optionally fill in `content/support` and `content/CONTRIBUTORS` (see [Optional pages](#optional-pages) below).
 
@@ -58,7 +58,7 @@ content/
   tags                  # Tag registry (managed by tagger.py)
   support               # Optional: acknowledgements, one bullet point per line
   CONTRIBUTORS          # Optional: contributor names, one per line
-build/                  # Generated — gitignored, created at runtime
+build/                  # Generated - gitignored, created at runtime
   document/             # plasTeX HTML output
   document.paux         # plasTeX auxiliary file
   tags.sqlite           # Main content database
@@ -75,8 +75,8 @@ Edit `content/configuration.py` to set your project title, domain, and other opt
 
 Two pages are driven by plain-text files you can fill in:
 
-- **`/acknowledgements`** — add one entry per line to `content/support`. Lines starting with `%` are treated as comments and ignored.
-- **`/contributors`** — add one name per line to `content/CONTRIBUTORS`. Same comment syntax.
+- **`/acknowledgements`** - add one entry per line to `content/support`. Lines starting with `%` are treated as comments and ignored.
+- **`/contributors`** - add one name per line to `content/CONTRIBUTORS`. Same comment syntax.
 
 If either file is absent the corresponding page still works, it will just have an empty list.
 
@@ -112,8 +112,8 @@ A lightweight one-shot container that renders the document to static HTML with u
 
 Two services:
 
-- **`gerby`** — serves the site with Flask in debug mode. Automatically reloads when you edit Python or template files in `gerby-website`.
-- **`watcher`** — polls `content/tex/` every 2 seconds and re-runs the full build pipeline (tagger → plasTeX → database import) whenever a `.tex` file changes.
+- **`gerby`** - serves the site with Flask in debug mode. Automatically reloads when you edit Python or template files in `gerby-website`.
+- **`watcher`** - polls `content/tex/` every 2 seconds and re-runs the full build pipeline (tagger -> plasTeX -> database import) whenever a `.tex` file changes.
 
 Uses [gerby-plastex](https://github.com/koffie/gerby-plastex), a fork of plasTeX with the Gerby renderer bundled in.
 

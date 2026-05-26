@@ -3,7 +3,7 @@ __pycache__
 *.pyc
 *.pyo
 
-# project content — mounted at runtime, not baked in
+# project content - mounted at runtime, not baked in
 build/
 content/
 document/
